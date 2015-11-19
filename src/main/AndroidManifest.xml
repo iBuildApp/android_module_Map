@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ibuildapp.romanblack.MapPlugin">
+
+    <application>
+        <activity android:name="MapPlugin"
+            android:configChanges="orientation">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name="MapRoute"
+            android:configChanges="orientation"/>
+    </application>
+
+</manifest>

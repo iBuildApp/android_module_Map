@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+                android:id="@+id/romanblack_map_main"  
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent">
+
+    <com.google.android.maps.MapView
+        android:id="@+id/romanblack_map_view" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:enabled="true" 
+        android:apiKey="0aG0-e2Jvi7uYJMiahs6Ru1-728CCA2DE86IWTw"/>
+
+    <ZoomControls
+        android:id="@+id/romanblack_map_layout_zoom" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:layout_alignParentTop="true" 
+        android:layout_alignParentLeft="true" 
+    /> 
+
+    <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" 
+                   android:layout_width="fill_parent" 
+                   android:layout_height="fill_parent"
+                   android:orientation="vertical"
+                   android:gravity="bottom">
+
+        <com.ibuildapp.romanblack.MapPlugin.MapBottomPanel
+            android:id="@+id/romanbalack_map_bottom_panel" 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp">
+		
+            <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" 
+                           android:layout_width="fill_parent" 
+                           android:layout_height="fill_parent"
+                           android:orientation="vertical"
+                           android:gravity="center">
+		    
+                <Button android:id="@+id/romanblack_map_user_location"
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Show direction!" 
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"/>
+            </LinearLayout>
+        </com.ibuildapp.romanblack.MapPlugin.MapBottomPanel>
+
+    </LinearLayout>
+
+</RelativeLayout>
