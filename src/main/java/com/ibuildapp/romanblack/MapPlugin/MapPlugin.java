@@ -1,13 +1,13 @@
 /****************************************************************************
-*                                                                           *
-*  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
-*                                                                           *
-*  This file is part of iBuildApp.                                          *
-*                                                                           *
-*  This Source Code Form is subject to the terms of the iBuildApp License.  *
-*  You can obtain one at http://ibuildapp.com/license/                      *
-*                                                                           *
-****************************************************************************/
+ *                                                                           *
+ *  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
+ *                                                                           *
+ *  This file is part of iBuildApp.                                          *
+ *                                                                           *
+ *  This Source Code Form is subject to the terms of the iBuildApp License.  *
+ *  You can obtain one at http://ibuildapp.com/license/                      *
+ *                                                                           *
+ ****************************************************************************/
 package com.ibuildapp.romanblack.MapPlugin;
 
 import android.app.ProgressDialog;
@@ -32,6 +32,7 @@ import android.webkit.WebViewClient;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 import com.appbuilder.sdk.android.AppBuilderModuleMain;
+import com.appbuilder.sdk.android.StartUpActivity;
 import com.appbuilder.sdk.android.Widget;
 
 import java.io.*;
@@ -45,6 +46,7 @@ import java.util.TimerTask;
  * Main module class. Module entry point.
  * Represents Map widget.
  */
+@StartUpActivity(moduleName = "MapPlugin")
 public class MapPlugin extends AppBuilderModuleMain implements LocationListener {
 
     private final int INITIALIZATION_FAILED = 0;
@@ -189,6 +191,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
 
                 mapView.addJavascriptInterface(new JavaScriptInterface(), "googleredirect");
                 mapView.getSettings().setJavaScriptEnabled(true);
+//                mapView.getSettings().setPluginsEnabled(true);
                 mapView.getSettings().setGeolocationEnabled(true);
 
 
@@ -221,15 +224,12 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
 
                 // topbar initialization
                 disableSwipe();
-                boolean showSideBar = ((Boolean) getIntent().getExtras().getSerializable("showSideBar")).booleanValue();
-                if (!showSideBar) {
-                    setTopBarLeftButtonText(getResources().getString(R.string.common_home_upper), true, new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            finish();
-                        }
-                    });
-                }
+                setTopBarLeftButtonText(getResources().getString(R.string.common_home_upper), true, new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                });
 
 
                 if (widget.getPluginXmlData().length() > 0) {
@@ -635,7 +635,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
         /**
          * Go to selected URL.
          * @param urlToGo URL to go
-         * @param pointName 
+         * @param pointName
          */
         public void goToUrl(String urlToGo, String pointName) {
             MapPlugin.this.urlToGo = urlToGo;
@@ -646,7 +646,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
     /**
      * Redirects to given web URL.
      * @param urlToGo URL to redirect
-     * @param pointName 
+     * @param pointName
      */
     private void goToUrl(String urlToGo, String pointName) {
         mapView.loadUrl(urlToGo);
@@ -661,7 +661,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
     private void TimerMethod() {
         this.runOnUiThread(Timer_Tick);
     }
-    
+
     /**
      * This implementation updates user map location.
      */

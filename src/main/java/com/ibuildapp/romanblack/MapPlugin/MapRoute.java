@@ -110,6 +110,7 @@ public class MapRoute extends AppBuilderModule {
             webView = (WebView) findViewById(R.id.romanblack_mapweb_route_webview);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setGeolocationEnabled(true);
+//            webView.getSettings().setPluginsEnabled(true);
             webView.getSettings().setAllowFileAccess(true);
             webView.getSettings().setAppCacheEnabled(true);
             webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
