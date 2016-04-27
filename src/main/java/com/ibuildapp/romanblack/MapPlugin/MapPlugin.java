@@ -10,12 +10,10 @@
  ****************************************************************************/
 package com.ibuildapp.romanblack.MapPlugin;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,18 +25,27 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.*;
-import android.widget.AdapterView.OnItemSelectedListener;
 import com.appbuilder.sdk.android.AppBuilderModuleMain;
 import com.appbuilder.sdk.android.StartUpActivity;
 import com.appbuilder.sdk.android.Widget;
+import com.appbuilder.sdk.android.animations.AnimUtils;
+import com.ibuildapp.romanblack.MapPlugin.dialog.RouteSelectDialog;
+import com.ibuildapp.romanblack.MapPlugin.model.MapLocation;
+import com.ibuildapp.romanblack.MapPlugin.view.MapRoute;
+import com.ibuildapp.romanblack.MapPlugin.xml.EntityParser;
+import com.ibuildapp.romanblack.MapPlugin.model.MapItem;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,6 +56,7 @@ import java.util.TimerTask;
 @StartUpActivity(moduleName = "MapPlugin")
 public class MapPlugin extends AppBuilderModuleMain implements LocationListener {
 
+    private static final int ANIMATION_DURATION = 500;
     private final int INITIALIZATION_FAILED = 0;
     private final int NEED_INTERNET_CONNECTION = 1;
     private final int SHOW_MAP = 2;
@@ -74,13 +82,12 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
     private LocationManager locationManager = null;
     private Widget widget = null;
     private ArrayList<MapItem> items = null;
-    private ArrayList<MapLocation> locations = new ArrayList<MapLocation>();
-    private ProgressDialog progressDialog = null;
+    private ArrayList<MapLocation> locations = new ArrayList<>();
     private WebView mapView = null;
-    private Button btnDirection = null;
-    private Button btnMyLocation = null;
+    private View btnDirection = null;
+    private View btnMyLocation = null;
     private Spinner locationSpinner = null;
-    private MapBottomPanel mapBottomPanel = null;
+    private View mapBottomPanel = null;
     private Timer mTimer;
     private TimerTask mTask;
     private Handler handler = new Handler() {
@@ -104,10 +111,6 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
                 break;
                 case SHOW_MAP: {
                     showMap();
-                }
-                break;
-                case HIDE_PROGRESS_DIALOG: {
-                    hideProgressDialog();
                 }
                 break;
                 case CLOSE_ACTIVITY: {
@@ -142,10 +145,6 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
                     choseRouteFinal();
                 }
                 break;
-                case SHOW_PROGRESS_DIALOG: {
-                    showProgressDialog();
-                }
-                break;
                 case GO_TO_URL: {
                     MapPlugin.this.goToUrl(urlToGo, "");
                 }
@@ -153,6 +152,8 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
             }
         }
     };
+    private View mainLayout;
+    private View progressLayout;
 
     @Override
     public void destroy() {
@@ -171,6 +172,11 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = cm.getActiveNetworkInfo();
             if (ni != null && ni.isConnectedOrConnecting()) {
+
+                mainLayout = findViewById(R.id.map_main_layout);
+                progressLayout = findViewById(R.id.map_main_progress_layout);
+                mainLayout.setVisibility(View.INVISIBLE);
+
                 // for storing map and showing progress dialog
                 mapView = (WebView) findViewById(R.id.romanblack_mapweb_webview);
                 mapView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
@@ -179,7 +185,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
 
-                        handler.sendEmptyMessage(HIDE_PROGRESS_DIALOG);
+                        swapLayouts();
                     }
 
                     @Override
@@ -224,12 +230,14 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
 
                 // topbar initialization
                 disableSwipe();
-                setTopBarLeftButtonText(getResources().getString(R.string.common_home_upper), true, new OnClickListener() {
+                setTopBarLeftButtonTextAndColor(getResources().getString(R.string.common_home_upper), getResources().getColor(android.R.color.black), true, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         finish();
                     }
                 });
+                setTopBarTitleColor(getResources().getColor(android.R.color.black));
+                setTopBarBackgroundColor(Color.parseColor("#FFFFFE"));
 
 
                 if (widget.getPluginXmlData().length() > 0) {
@@ -241,7 +249,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
                 parser.parse();
 
                 // Mylocation Button handler
-                btnMyLocation = (Button) findViewById(R.id.romanblack_mapweb_back_to_my_location);
+                btnMyLocation =  findViewById(R.id.romanblack_mapweb_back_to_my_location);
                 btnMyLocation.setOnClickListener(new OnClickListener() {
                     public void onClick(View arg0) {
 
@@ -274,13 +282,13 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
                     }
                 });
 
-                // if need to show mylocation button 
+                // if need to show mylocation button
                 if (parser.showCurrentLocation == false) {
                     btnMyLocation.setVisibility(View.GONE);
                 }
 
                 // ShowDirection Button handler
-                btnDirection = (Button) findViewById(R.id.romanblack_mapweb_user_direction);
+                btnDirection = findViewById(R.id.romanblack_mapweb_user_direction);
                 btnDirection.setOnClickListener(new OnClickListener() {
                     public void onClick(View arg0) {
                         try {//ErrorLogging
@@ -317,7 +325,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
                     }
                 });
 
-                mapBottomPanel = (MapBottomPanel) findViewById(R.id.romanblack_mapweb_bottom_panel);
+                mapBottomPanel =  findViewById(R.id.romanblack_mapweb_bottom_panel);
 
                 // obtain locatonManager object
                 locationManager = (LocationManager) MapPlugin.this.
@@ -326,15 +334,6 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     handler.sendEmptyMessage(NO_GPS_SERVICE);
                 }
-
-                // show progress dialog
-                progressDialog = ProgressDialog.show(this, "", getString(R.string.common_loading_upper));
-                progressDialog.setCancelable(true);
-                progressDialog.setOnCancelListener(new OnCancelListener() {
-                    public void onCancel(DialogInterface arg0) {
-                        handler.sendEmptyMessage(CLOSE_ACTIVITY);
-                    }
-                });
 
                 // update user location every 10sec
                 mTimer = new Timer();
@@ -366,7 +365,7 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
 
                             htmlSource = "";
                             try {
-                                // get html source from resources 
+                                // get html source from resources
                                 InputStream is = getResources().openRawResource(R.raw.romanblack_mapweb_page_refreshable);
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                 int flag = 0;
@@ -402,6 +401,17 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
         }
     }
 
+    private void swapLayouts() {
+        Animation progressAnimation = AnimUtils.createAlphaGoneAnimation(progressLayout, ANIMATION_DURATION);
+        progressAnimation.setInterpolator(new DecelerateInterpolator());
+
+        Animation mainLayoutAnimation = AnimUtils.createBottomShowAnimation(mainLayout, ANIMATION_DURATION);
+        mainLayoutAnimation.setInterpolator(new DecelerateInterpolator());
+
+        progressLayout.startAnimation(progressAnimation);
+        mainLayout.startAnimation(mainLayoutAnimation);
+    }
+
     /**
      * This method using when module data is too big to put in Intent.
      * @param fileName - xml module data file name
@@ -431,6 +441,8 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000,
                 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 0, this);
+
         if (locationSpinner != null) {
             locationSpinner.setSelection(0);
         }
@@ -478,43 +490,25 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
      * Shows Spinner to chose route destination location.
      */
     private void choseRouteFinal() {
-        try {//ErrorLogging
-
-            if (locationSpinner == null) {
-                locationSpinner = new Spinner(this);
-                locationSpinner.setVisibility(View.INVISIBLE);
-
-                ArrayList<String> strings = new ArrayList<String>();
-                strings.add(getString(R.string.common_cancel_upper));
-                for (int i = 0; i < locations.size(); i++) {
-                    strings.add(locations.get(i).getTitle());
-                }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item, strings);
-
-                locationSpinner.setAdapter(adapter);
-                locationSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> av, View view, int i, long l) {
-                        if (i != 0) {
-                            try {
-                                dstLatitude = locations.get(i - 1).getLatitude();
-                                dstLongitude = locations.get(i - 1).getLongitude();
-                                handler.sendEmptyMessage(DRAW_ROUTE);
-                            } catch (NullPointerException nPEx) {
-                            }
-                        }
-                    }
-
-                    public void onNothingSelected(AdapterView<?> av) {
-                        Log.e("", "");
-                    }
-                });
-                mapView.addView(locationSpinner);
+        try {
+            List<String> strings = new ArrayList<>();
+            for (int i = 0; i < locations.size(); i++) {
+                strings.add(locations.get(i).getTitle());
             }
 
-            locationSpinner.performClick();
+            RouteSelectDialog dialog = new RouteSelectDialog(this, strings, new RouteSelectDialog.RouteDialogListener() {
+                @Override
+                public void itemClick(int position) {
+                    try {
+                        dstLatitude = locations.get(position).getLatitude();
+                        dstLongitude = locations.get(position).getLongitude();
+                        handler.sendEmptyMessage(DRAW_ROUTE);
+                    } catch (NullPointerException nPEx) {
+                    }
+                }
+            });
 
+            dialog.show();
 
         } catch (Exception e) {
         }
@@ -580,27 +574,12 @@ public class MapPlugin extends AppBuilderModuleMain implements LocationListener 
             Intent intent = new Intent(this, MapRoute.class);
             intent.putExtra("url", routeURL);
             startActivity(intent);
-
+//            overridePendingTransition(R.anim.activity_open_translate, R.anim.activity_close_scale);
         } catch (Exception e) {
         }
     }
 
-    private void showProgressDialog() {
-        if (progressDialog != null) {
-            if (!progressDialog.isShowing()) {
-                progressDialog = ProgressDialog.show(this, "", getString(R.string.common_loading_upper));
-            }
-        }
-    }
-
-    private void hideProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
-
     private void closeActivity() {
-        hideProgressDialog();
         finish();
     }
 

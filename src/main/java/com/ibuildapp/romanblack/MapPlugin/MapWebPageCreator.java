@@ -11,6 +11,9 @@
 package com.ibuildapp.romanblack.MapPlugin;
 
 import android.util.Log;
+
+import com.ibuildapp.romanblack.MapPlugin.model.MapItem;
+
 import java.util.ArrayList;
 
 /**
@@ -28,7 +31,7 @@ public class MapWebPageCreator {
      * @return prepared map HTML page
      */
     static String createMapPage(String sourcePage, ArrayList<MapItem> items, int zoom,
-            float srcLatitude, float srcLongitude) {
+                                float srcLatitude, float srcLongitude) {
         String mapPage = "";
 
         // create map points and past it to source html page

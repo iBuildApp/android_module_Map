@@ -8,7 +8,7 @@
 *  You can obtain one at http://ibuildapp.com/license/                      *
 *                                                                           *
 ****************************************************************************/
-package com.ibuildapp.romanblack.MapPlugin;
+package com.ibuildapp.romanblack.MapPlugin.xml;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -21,6 +21,8 @@ import android.sax.RootElement;
 import android.sax.StartElementListener;
 import android.util.Log;
 import android.util.Xml;
+
+import com.ibuildapp.romanblack.MapPlugin.model.MapItem;
 
 /**
  * This class using for module xml data parsing.
@@ -38,7 +40,7 @@ public class EntityParser {
      * Constructs new EntityParser instance.
      * @param xml - module xml data to parse
      */
-    EntityParser(String xml) {
+    public EntityParser(String xml) {
         this.xml = xml;
     }
 

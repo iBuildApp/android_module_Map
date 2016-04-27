@@ -8,32 +8,43 @@
 *  You can obtain one at http://ibuildapp.com/license/                      *
 *                                                                           *
 ****************************************************************************/
-package com.ibuildapp.romanblack.MapPlugin;
+package com.ibuildapp.romanblack.MapPlugin.model;
 
-import java.io.Serializable;
+import com.google.android.maps.GeoPoint;
 
 /**
  * Entity class that represents map location.
  */
-public class MapItem implements Serializable {
+public class MapLocation {
 
-    private static final long serialVersionUID = 1L;
+    private GeoPoint point = null;
     private String title = "";
     private String subtitle = "";
     private String description = "";
-    private String iconUrl = "";
-    private double longitude = 0;
-    private double latitude = 0;
+    private int latitude = 0;
+    private int longitude = 0;
+    
+    /**
+     * Constructs new MapLocation instance.
+     * @param latitude location latitude
+     * @param longitude location longitude
+     */
+    public MapLocation(double latitude, double longitude) {
+        this.latitude = (int) (latitude * 1e6);
+        this.longitude = (int) (longitude * 1e6);
+    }
 
     /**
-     * Constructs new map location.
+     * Returns the location GeoPoint.
+     * @return the location GeoPoint
      */
-    MapItem() {
+    public GeoPoint getPoint() {
+        return point;
     }
 
     /**
      * Sets the location title.
-     * @param value the location title
+     * @param value the location title to set
      */
     public void setTitle(String value) {
         title = value;
@@ -49,7 +60,7 @@ public class MapItem implements Serializable {
 
     /**
      * Sets the location subtitle.
-     * @param value 
+     * @param value the location subtitle to set
      */
     public void setSubtitle(String value) {
         subtitle = value;
@@ -65,7 +76,7 @@ public class MapItem implements Serializable {
 
     /**
      * Sets the location description.
-     * @param value the location description
+     * @param value the location description to set
      */
     public void setDescription(String value) {
         description = value;
@@ -80,54 +91,18 @@ public class MapItem implements Serializable {
     }
 
     /**
-     * Returns the location longitude.
-     * @param value the location longitude to set
+     * Returns the location latitude.
+     * @return the latitude latitude
      */
-    public void setLongitude(double value) {
-        longitude = value;
+    public int getLatitude() {
+        return latitude;
     }
 
     /**
      * Returns the location longitude.
      * @return the location longitude
      */
-    public double getLongitude() {
+    public int getLongitude() {
         return longitude;
-    }
-
-    /**
-     * Sets the location latitude.
-     * @param value the location latitude to set
-     */
-    public void setLatitude(double value) {
-        latitude = value;
-    }
-
-    /**
-     * Returns the location latitude
-     * @return the location latitude
-     */
-    public double getLatitude() {
-        return latitude;
-    }
-
-    /**
-     * Returns the location pin icon URL.
-     * @return the location pin icon URL
-     */
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    /**
-     * Sets the location pin icon URL.
-     * @param iconUrl the location pin icon URL
-     */
-    public void setIconUrl(String iconUrl) {
-        if (iconUrl == null) {
-            iconUrl = "";
-        }
-
-        this.iconUrl = iconUrl;
     }
 }

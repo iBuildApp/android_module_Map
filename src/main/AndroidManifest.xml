@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ibuildapp.romanblack.MapPlugin">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application>
         <activity android:name="MapPlugin"
             android:configChanges="orientation">
@@ -9,7 +13,7 @@
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name="MapRoute"
+        <activity android:name=".view.MapRoute"
             android:configChanges="orientation"/>
     </application>
 

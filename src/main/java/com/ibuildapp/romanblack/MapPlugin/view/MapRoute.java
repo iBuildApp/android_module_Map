@@ -8,7 +8,7 @@
 *  You can obtain one at http://ibuildapp.com/license/                      *
 *                                                                           *
 ****************************************************************************/
-package com.ibuildapp.romanblack.MapPlugin;
+package com.ibuildapp.romanblack.MapPlugin.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -166,5 +166,12 @@ public class MapRoute extends AppBuilderModule {
             progressDialog.dismiss();
         }
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
+//        overridePendingTransition(R.anim.activity_open_scale, R.anim.activity_close_translate);
     }
 }

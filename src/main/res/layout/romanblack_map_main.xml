@@ -25,7 +25,7 @@
                    android:orientation="vertical"
                    android:gravity="bottom">
 
-        <com.ibuildapp.romanblack.MapPlugin.MapBottomPanel
+        <com.ibuildapp.romanblack.MapPlugin.view.MapBottomPanel
             android:id="@+id/romanbalack_map_bottom_panel" 
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"/>
             </LinearLayout>
-        </com.ibuildapp.romanblack.MapPlugin.MapBottomPanel>
+        </com.ibuildapp.romanblack.MapPlugin.view.MapBottomPanel>
 
     </LinearLayout>
 

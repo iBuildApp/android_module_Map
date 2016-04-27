@@ -8,7 +8,7 @@
 *  You can obtain one at http://ibuildapp.com/license/                      *
 *                                                                           *
 ****************************************************************************/
-package com.ibuildapp.romanblack.MapPlugin;
+package com.ibuildapp.romanblack.MapPlugin.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

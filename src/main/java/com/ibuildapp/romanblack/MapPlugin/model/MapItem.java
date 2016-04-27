@@ -8,43 +8,32 @@
 *  You can obtain one at http://ibuildapp.com/license/                      *
 *                                                                           *
 ****************************************************************************/
-package com.ibuildapp.romanblack.MapPlugin;
+package com.ibuildapp.romanblack.MapPlugin.model;
 
-import com.google.android.maps.GeoPoint;
+import java.io.Serializable;
 
 /**
  * Entity class that represents map location.
  */
-public class MapLocation {
+public class MapItem implements Serializable {
 
-    private GeoPoint point = null;
+    private static final long serialVersionUID = 1L;
     private String title = "";
     private String subtitle = "";
     private String description = "";
-    private int latitude = 0;
-    private int longitude = 0;
-    
-    /**
-     * Constructs new MapLocation instance.
-     * @param latitude location latitude
-     * @param longitude location longitude
-     */
-    public MapLocation(double latitude, double longitude) {
-        this.latitude = (int) (latitude * 1e6);
-        this.longitude = (int) (longitude * 1e6);
-    }
+    private String iconUrl = "";
+    private double longitude = 0;
+    private double latitude = 0;
 
     /**
-     * Returns the location GeoPoint.
-     * @return the location GeoPoint
+     * Constructs new map location.
      */
-    public GeoPoint getPoint() {
-        return point;
+    public MapItem() {
     }
 
     /**
      * Sets the location title.
-     * @param value the location title to set
+     * @param value the location title
      */
     public void setTitle(String value) {
         title = value;
@@ -60,7 +49,7 @@ public class MapLocation {
 
     /**
      * Sets the location subtitle.
-     * @param value the location subtitle to set
+     * @param value 
      */
     public void setSubtitle(String value) {
         subtitle = value;
@@ -76,7 +65,7 @@ public class MapLocation {
 
     /**
      * Sets the location description.
-     * @param value the location description to set
+     * @param value the location description
      */
     public void setDescription(String value) {
         description = value;
@@ -91,18 +80,54 @@ public class MapLocation {
     }
 
     /**
-     * Returns the location latitude.
-     * @return the latitude latitude
+     * Returns the location longitude.
+     * @param value the location longitude to set
      */
-    public int getLatitude() {
-        return latitude;
+    public void setLongitude(double value) {
+        longitude = value;
     }
 
     /**
      * Returns the location longitude.
      * @return the location longitude
      */
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
+    }
+
+    /**
+     * Sets the location latitude.
+     * @param value the location latitude to set
+     */
+    public void setLatitude(double value) {
+        latitude = value;
+    }
+
+    /**
+     * Returns the location latitude
+     * @return the location latitude
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * Returns the location pin icon URL.
+     * @return the location pin icon URL
+     */
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    /**
+     * Sets the location pin icon URL.
+     * @param iconUrl the location pin icon URL
+     */
+    public void setIconUrl(String iconUrl) {
+        if (iconUrl == null) {
+            iconUrl = "";
+        }
+
+        this.iconUrl = iconUrl;
     }
 }
