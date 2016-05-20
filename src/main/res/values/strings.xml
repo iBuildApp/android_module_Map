@@ -18,4 +18,7 @@
     <string name="map">Maps</string>
 
     <string name="common_home_upper">Home</string>
+    <string name="notification_error_ssl_cert_invalid">SSL error occurred. Would you like to proceed?</string>
+    <string name="map_continue">Continue</string>
+    <string name="map_cancel">Cancel</string>
 </resources>

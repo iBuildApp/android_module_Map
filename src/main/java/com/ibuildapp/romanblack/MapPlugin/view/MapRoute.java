@@ -10,16 +10,20 @@
 ****************************************************************************/
 package com.ibuildapp.romanblack.MapPlugin.view;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.WindowManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -132,6 +136,26 @@ public class MapRoute extends AppBuilderModule {
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     handler.sendEmptyMessage(HIDE_PROGRESS);
+                }
+
+                @Override
+                public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(MapRoute.this);
+                    builder.setMessage(R.string.notification_error_ssl_cert_invalid);
+                    builder.setPositiveButton(MapRoute.this.getResources().getString(R.string.map_continue), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            handler.proceed();
+                        }
+                    });
+                    builder.setNegativeButton(MapRoute.this.getResources().getString(R.string.map_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            handler.cancel();
+                        }
+                    });
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
 
                 @Override
