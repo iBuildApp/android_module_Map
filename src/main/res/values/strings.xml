@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MapWebPlugin</string>
-    
-    <string name="common_loading_upper">Loading...</string>
-    <string name="common_cancel_upper">Cancel</string>
-    
-    <string name="alert_no_internet">Cellular Data is Turned off. Turn on cellular data or use Wi-Fi to access data</string>
-    <string name="alert_cannot_init">Cannot initialize plugin</string>
-    
-    <string name="romanblack_map_route_upper">Route</string>
-    
-    <string name="romanblack_map_alert_cannot_init_route">Cannot initialize route.</string>
-    <string name="romanblack_map_alert_gps_not_available">GPS service is not available.</string>
-    <string name="romanblack_map_alert_wait_for_gps">Wait for initialization GPS service.</string>
+    <string name="map_home">Home</string>
+    <string name="map_widget_name">Map</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDth4v3WyuYcmZEQpDz_Hw9EGkknEeJ4nE</string>
+    <string name="map_back">Back</string>
 
-    <string name="show_direction">Show direction!</string>
-    <string name="map">Maps</string>
+    <string name="map_notification_error_ssl_cert_invalid">SSL error occurred. Would you like to proceed?</string>
+    <string name="map_on_cancel">Cancel</string>
+    <string name="map_on_continue">Continue</string>
 
-    <string name="common_home_upper">Home</string>
-    <string name="notification_error_ssl_cert_invalid">SSL error occurred. Would you like to proceed?</string>
-    <string name="map_continue">Continue</string>
-    <string name="map_cancel">Cancel</string>
+    <string name="map_send_email">Send email…</string>
+    <string name="map_loading">Loading…</string>
 </resources>

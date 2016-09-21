@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="show_direction">Показать маршрут!</string>
+    <string name="map_home">Домой</string>
+    <string name="map_widget_name">Карты</string>
+    <string name="map_back">Назад</string>
 
-    <string name="common_loading_upper">Загрузка...</string>
-    <string name="common_cancel_upper">Отмена</string>
-
-    <string name="alert_no_internet">Мобильный интернет отключен. Включите интернет, либо используйте WiFi</string>
-    <string name="alert_cannot_init">Невозможно инициализировать плагин</string>
-
-    <string name="romanblack_map_route_upper">Маршрут</string>
-
-    <string name="romanblack_map_alert_cannot_init_route">Неудалось проложить маршрут.</string>
-    <string name="romanblack_map_alert_gps_not_available">GPS сервис недоступен.</string>
-    <string name="romanblack_map_alert_wait_for_gps">Подождите, пока завершится инициализация GPS</string>
-    <string name="map">Карты</string>
-
-    <string name="common_home_upper">Домой</string>
-
+    <string name="map_send_email">Отправить email</string>
+    <string name="map_loading">Загрузка…</string>
 </resources>

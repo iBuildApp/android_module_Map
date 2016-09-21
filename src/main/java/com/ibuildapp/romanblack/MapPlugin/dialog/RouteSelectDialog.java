@@ -12,7 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ibuildapp.romanblack.MapPlugin.MapPlugin;
 import com.ibuildapp.romanblack.MapPlugin.R;
+import com.ibuildapp.romanblack.MapPlugin.model.MapItem;
+import com.restfb.util.StringUtils;
 
 import java.util.List;
 
@@ -21,12 +24,14 @@ public class RouteSelectDialog extends Dialog{
         void itemClick(int position);
     }
 
-    private List<String> items;
+    private List<MapItem> items;
     private ListView list;
+    private MapPlugin context;
 
-    public RouteSelectDialog(Context context, List<String> items, final RouteDialogListener listener) {
+    public RouteSelectDialog(MapPlugin context, List<MapItem> items, final RouteDialogListener listener) {
         super(context);
         this.items = items;
+        this.context = context;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCanceledOnTouchOutside(true);
@@ -51,6 +56,7 @@ public class RouteSelectDialog extends Dialog{
 
         public  class ViewHolder{
             public TextView routeName;
+            public View linkView;
         }
         @Override
         public int getCount() {
@@ -58,7 +64,7 @@ public class RouteSelectDialog extends Dialog{
         }
 
         @Override
-        public String getItem(int position) {
+        public MapItem getItem(int position) {
             return items.get(position);
         }
 
@@ -69,18 +75,31 @@ public class RouteSelectDialog extends Dialog{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final String item = getItem(position);
+            final MapItem item = getItem(position);
             ViewHolder holder;
 
             if(convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.map_route_select_dialog_item, null);
                 holder = new ViewHolder();
                 holder.routeName = (TextView) convertView.findViewById(R.id.map_route_select_dialog_item_text);
+                holder.linkView = convertView.findViewById(R.id.map_route_select_dialog_link);
+
                 convertView.setTag(holder);
             }
             else holder = (ViewHolder) convertView.getTag();
 
-            holder.routeName.setText(item);
+            holder.routeName.setText(item.getTitle());
+            if (StringUtils.isBlank(item.getDescription()))
+                holder.linkView.setVisibility(View.GONE);
+            else holder.linkView.setVisibility(View.VISIBLE);
+
+            holder.linkView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                    context.showInfoActivity(item.getDescription());
+                }
+            });
 
             return convertView;
         }
