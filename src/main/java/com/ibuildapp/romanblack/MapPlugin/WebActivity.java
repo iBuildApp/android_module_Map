@@ -23,7 +23,6 @@ import com.appbuilder.sdk.android.AppBuilderModuleMainAppCompat;
 import com.appbuilder.sdk.android.Widget;
 import com.ibuildapp.romanblack.MapPlugin.utils.MapConstants;
 
-
 public class WebActivity extends AppBuilderModuleMainAppCompat {
     final private int SHOW_PROGRESS = 0;
     final private int HIDE_PROGRESS = 1;

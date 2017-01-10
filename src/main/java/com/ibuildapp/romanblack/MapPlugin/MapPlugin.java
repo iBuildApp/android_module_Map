@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.appbuilder.sdk.android.AppBuilderModuleMainAppCompat;
+import com.appbuilder.sdk.android.Utils;
 import com.appbuilder.sdk.android.Widget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -126,7 +127,10 @@ public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapRea
     private void initContent() {
         Widget widget = (Widget) getIntent().getSerializableExtra(MapConstants.EXTRA_WIDGET);
         title = widget.getTitle();
-        xml = widget.getPluginXmlData();
+        xml = widget.getPluginXmlData().length() == 0
+                ? Utils.readXmlFromFile(widget.getPathToXmlFile())
+                : widget.getPluginXmlData();
+
     }
 
     private void chooseRouteFinal() {

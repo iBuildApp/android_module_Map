@@ -2,6 +2,7 @@ package com.ibuildapp.romanblack.MapPlugin.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -64,7 +65,7 @@ public abstract class GeoUtils {
                         builder.icon(BitmapDescriptorFactory.fromResource(iconRes));
                     else{
                         Bitmap icon = Glide.with(context).load(item.getIconUrl()).asBitmap().into(-1, -1).get();
-                        builder.icon(BitmapDescriptorFactory.fromBitmap(icon));
+                        builder.icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(icon, 80, 80, false)));
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
