@@ -1,10 +1,22 @@
 package com.ibuildapp.romanblack.MapPlugin;
 
 
+import android.Manifest;
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.appbuilder.sdk.android.AppBuilderModuleMainAppCompat;
@@ -26,6 +38,7 @@ import com.ibuildapp.romanblack.MapPlugin.utils.rx.SimpleSubscriber;
 import com.ibuildapp.romanblack.MapPlugin.xml.EntityParser;
 import com.restfb.util.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +51,7 @@ import rx.schedulers.Schedulers;
 
 public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapReadyCallback {
 
+    private static final int LOCATION_REQUEST = 0;
     private String title;
     private String xml;
 
@@ -72,6 +86,7 @@ public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapRea
                 });
         setTopBarTitleColor(getResources().getColor(android.R.color.black));
 
+
         Schedulers.computation().createWorker().schedule(new Action0() {
             @Override
             public void call() {
@@ -87,6 +102,24 @@ public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapRea
                 });
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mapRun();
+                } else {
+
+                    finish();
+
+                }
+                return;
+            }
+        }
     }
 
     private void postUIInit() {
@@ -115,11 +148,12 @@ public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapRea
         });
 
         SupportMapFragment mapFragment = new SupportMapFragment();
+
         FragmentManager manager = getSupportFragmentManager();
 
         manager.beginTransaction()
-                    .replace(R.id.map_main_container, mapFragment)
-                    .commit();
+                .replace(R.id.map_main_container, mapFragment)
+                .commit();
 
         mapFragment.getMapAsync(this);
     }
@@ -144,7 +178,7 @@ public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapRea
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -158,6 +192,16 @@ public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapRea
         mapObject = googleMap;
         mapObject.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mapObject.getUiSettings().setMapToolbarEnabled(false);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MapPlugin.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_REQUEST);
+            return;
+        }
+    }
+
+    public void mapRun(){
+
         mapObject.setMyLocationEnabled(true);
 
         List<Observable<MarkerWrapper>> markerTasks = new ArrayList<>();
