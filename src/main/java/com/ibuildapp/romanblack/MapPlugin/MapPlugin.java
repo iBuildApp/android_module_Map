@@ -197,6 +197,8 @@ public class MapPlugin extends AppBuilderModuleMainAppCompat implements OnMapRea
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     LOCATION_REQUEST);
             return;
+        } else {
+            mapRun();
         }
     }
 
