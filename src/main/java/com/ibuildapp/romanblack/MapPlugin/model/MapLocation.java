@@ -10,14 +10,15 @@
 ****************************************************************************/
 package com.ibuildapp.romanblack.MapPlugin.model;
 
-import com.google.android.maps.GeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Entity class that represents map location.
  */
 public class MapLocation {
 
-    private GeoPoint point = null;
+    private LatLng point = null;
     private String title = "";
     private String subtitle = "";
     private String description = "";
@@ -38,7 +39,7 @@ public class MapLocation {
      * Returns the location GeoPoint.
      * @return the location GeoPoint
      */
-    public GeoPoint getPoint() {
+    public LatLng getPoint() {
         return point;
     }
 
